@@ -74,6 +74,16 @@ export function ColaboradorFormDialog({
             <Label htmlFor="cargo">Cargo</Label>
             <Input id="cargo" name="cargo" defaultValue={colaborador?.cargo ?? ""} />
           </div>
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="data_admissao">Data de admissão</Label>
+            <Input
+              id="data_admissao"
+              name="data_admissao"
+              type="date"
+              required={!colaborador}
+              defaultValue={colaborador?.data_admissao ?? ""}
+            />
+          </div>
           {colaborador && (
             <label className="flex items-center gap-2 text-sm">
               <input type="hidden" name="ativo" value={ativo ? "true" : "false"} />

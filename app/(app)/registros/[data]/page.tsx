@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ListaDiaSelecionavel, type ColaboradorDia } from "@/components/registros/lista-dia-selecionavel";
 import { formatDataPtBr } from "@/lib/registros/dates";
-import { getStatusPonto } from "@/lib/registros/alerts";
+import { estaAdmitidoEm, getStatusPonto } from "@/lib/registros/alerts";
 import type { Tables } from "@/lib/supabase/types";
 
 export const metadata: Metadata = {
@@ -29,11 +29,13 @@ export default async function RegistrosDoDiaPage({
     registrosPorColaborador.set(r.colaborador_id, r);
   }
 
-  const colaboradoresDia: ColaboradorDia[] = (colaboradores ?? []).map((c) => ({
-    id: c.id,
-    nome: c.nome,
-    status: getStatusPonto(registrosPorColaborador.get(c.id)),
-  }));
+  const colaboradoresDia: ColaboradorDia[] = (colaboradores ?? [])
+    .filter((c) => estaAdmitidoEm(c, data))
+    .map((c) => ({
+      id: c.id,
+      nome: c.nome,
+      status: getStatusPonto(registrosPorColaborador.get(c.id)),
+    }));
 
   return (
     <div className="flex flex-col gap-6">

@@ -20,6 +20,7 @@ export type Database = {
           cargo: string | null
           cpf: string
           created_at: string
+          data_admissao: string | null
           id: string
           nome: string
           setor: string | null
@@ -29,6 +30,7 @@ export type Database = {
           cargo?: string | null
           cpf: string
           created_at?: string
+          data_admissao?: string | null
           id?: string
           nome: string
           setor?: string | null
@@ -38,6 +40,7 @@ export type Database = {
           cargo?: string | null
           cpf?: string
           created_at?: string
+          data_admissao?: string | null
           id?: string
           nome?: string
           setor?: string | null

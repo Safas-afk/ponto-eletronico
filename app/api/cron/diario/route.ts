@@ -24,14 +24,19 @@ export async function GET(request: Request) {
   const supabase = createAdminClient();
   const { data: colaboradoresAtivos, error: erroColaboradores } = await supabase
     .from("colaboradores")
-    .select("id")
+    .select("id, data_admissao")
     .eq("ativo", true);
 
   if (erroColaboradores) {
     return NextResponse.json({ error: "Erro ao buscar colaboradores" }, { status: 500 });
   }
 
-  const linhas: TablesInsert<"registros">[] = (colaboradoresAtivos ?? []).map((c) => ({
+  // nunca cria registro de dia anterior à admissão do colaborador
+  const admitidos = (colaboradoresAtivos ?? []).filter(
+    (c) => !c.data_admissao || c.data_admissao <= hoje,
+  );
+
+  const linhas: TablesInsert<"registros">[] = admitidos.map((c) => ({
     colaborador_id: c.id,
     data: hoje,
     observacao,

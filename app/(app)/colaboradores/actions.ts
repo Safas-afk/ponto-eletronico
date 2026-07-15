@@ -15,6 +15,7 @@ export async function upsertColaboradorAction(
   const cargo = formData.get("cargo");
   const setor = formData.get("setor");
   const ativo = formData.get("ativo");
+  const dataAdmissao = formData.get("data_admissao");
 
   if (typeof nome !== "string" || !nome.trim()) {
     return { error: "Nome é obrigatório.", success: false };
@@ -25,12 +26,19 @@ export async function upsertColaboradorAction(
     return { error: "CPF inválido — use 11 dígitos.", success: false };
   }
 
+  const ehNovoCadastro = typeof id !== "string" || !id;
+  const dataAdmissaoValida = typeof dataAdmissao === "string" && dataAdmissao.trim() ? dataAdmissao : null;
+  if (ehNovoCadastro && !dataAdmissaoValida) {
+    return { error: "Data de admissão é obrigatória.", success: false };
+  }
+
   const payload = {
     nome: nome.trim(),
     cpf: cpfDigits,
     cargo: typeof cargo === "string" && cargo.trim() ? cargo.trim() : null,
     setor: typeof setor === "string" && setor.trim() ? setor.trim() : null,
     ...(typeof ativo === "string" ? { ativo: ativo === "true" } : {}),
+    data_admissao: dataAdmissaoValida,
   };
 
   const supabase = await createClient();

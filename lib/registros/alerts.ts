@@ -28,17 +28,24 @@ export function isPunchIncomplete(registro: RegistroPontos | undefined): boolean
   return almocosPreenchidos === 1;
 }
 
+export function estaAdmitidoEm(
+  colaborador: { data_admissao: string | null },
+  dataIso: string,
+): boolean {
+  return !colaborador.data_admissao || colaborador.data_admissao <= dataIso;
+}
+
 export function getResumoDia(
-  colaboradoresAtivos: { id: string }[],
+  colaboradoresAtivos: { id: string; data_admissao: string | null }[],
   registrosDoDia: Map<string, RegistroPontos>,
+  dataIso: string,
 ): { completos: number; pendentes: number; total: number } {
-  const pendentes = colaboradoresAtivos.filter((c) =>
-    isPunchIncomplete(registrosDoDia.get(c.id)),
-  ).length;
+  const admitidos = colaboradoresAtivos.filter((c) => estaAdmitidoEm(c, dataIso));
+  const pendentes = admitidos.filter((c) => isPunchIncomplete(registrosDoDia.get(c.id))).length;
 
   return {
-    completos: colaboradoresAtivos.length - pendentes,
+    completos: admitidos.length - pendentes,
     pendentes,
-    total: colaboradoresAtivos.length,
+    total: admitidos.length,
   };
 }

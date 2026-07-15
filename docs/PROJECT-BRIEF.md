@@ -272,6 +272,15 @@ um campo `ativo` (boolean) em `colaboradores`, para que funcionários
 desligados saiam da lista do dia a dia sem precisar apagar o
 histórico já impresso/assinado daquele período.
 
+## Data de admissão (descoberto em uso real, corrigido)
+A tabela `colaboradores` precisa de um campo `data_admissao` (date).
+Sem isso, a rotina das 7h gera registros "pendentes de classificação"
+para dias anteriores à admissão de um colaborador novo (caso real:
+funcionário admitido em 13/07 recebeu pendência para os dias 1-12).
+Regra: a automação diária e qualquer cálculo de "dias pendentes" deve
+ignorar datas anteriores à `data_admissao` do colaborador. Obrigatório
+para novos cadastros; pode ficar em branco para os já existentes.
+
 ## Relatórios e impressão
 - Quem revisa/assina: o próprio funcionário, no papel impresso
 - Formato necessário: folha de ponto mensal por funcionário, pronta

@@ -52,7 +52,7 @@ export default async function RegistrosPage({
   const resumosPorDia = new Map<string, ResumoDiaCalendario>();
   for (const [dia, registrosDoDia] of registrosPorDia) {
     resumosPorDia.set(dia, {
-      ...getResumoDia(colaboradoresAtivos, registrosDoDia),
+      ...getResumoDia(colaboradoresAtivos, registrosDoDia, dia),
       temRegistro: registrosDoDia.size > 0,
     });
   }
