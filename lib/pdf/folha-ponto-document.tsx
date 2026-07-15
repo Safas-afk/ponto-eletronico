@@ -1,6 +1,6 @@
 import { Document, Page, View, Text, Image, StyleSheet, Font } from "@react-pdf/renderer";
 import { formatDataPtBr, formatHora, getDiasDoMes, NOMES_MESES } from "@/lib/registros/dates";
-import { OBSERVACOES_SEM_EXPEDIENTE } from "@/lib/registros/constants";
+import { OBSERVACOES_DIA_INTEIRO } from "@/lib/registros/constants";
 import type { Tables } from "@/lib/supabase/types";
 
 // Desliga a hifenização automática (ex: "Al-moço") — o cabeçalho da
@@ -10,13 +10,20 @@ Font.registerHyphenationCallback((word) => [word]);
 const PAGE_WIDTH = 595.28;
 const PAGE_HEIGHT = 841.89;
 
+// A logo do papel timbrado ficava colada na borda superior da página e
+// era cortada pela margem física não-imprimível da impressora — desce o
+// papel timbrado (e o texto junto, pra manter a distância relativa até
+// a logo) e sobra espaço embaixo, que já tinha folga entre a
+// assinatura e o endereço no rodapé.
+const DESLOCAMENTO_TIMBRADO = 24;
+
 // Margens extraídas do docx de referência (docs/referencia/*.docx,
 // w:pgMar em twips ÷ 20 = pt): top 1660, bottom 280, left 1559, right 1133.
 const styles = StyleSheet.create({
   page: {
     fontFamily: "Helvetica",
     fontSize: 9,
-    paddingTop: 83,
+    paddingTop: 83 + DESLOCAMENTO_TIMBRADO,
     paddingBottom: 14,
     paddingLeft: 78,
     paddingRight: 57,
@@ -26,7 +33,7 @@ const styles = StyleSheet.create({
   // fluxo do documento, com o texto renderizado por cima na mesma página.
   background: {
     position: "absolute",
-    top: 0,
+    top: DESLOCAMENTO_TIMBRADO,
     left: 0,
     width: PAGE_WIDTH,
     height: PAGE_HEIGHT,
@@ -102,7 +109,7 @@ function nomeDiaSemana(iso: string): string {
 function montarLinha(iso: string, registro: Tables<"registros"> | undefined): LinhaTabela {
   const diaNumero = Number(iso.slice(8, 10));
   const observacao = registro?.observacao ?? null;
-  const semExpediente = observacao !== null && OBSERVACOES_SEM_EXPEDIENTE.includes(observacao);
+  const semExpediente = observacao !== null && OBSERVACOES_DIA_INTEIRO.includes(observacao);
 
   const entrada = semExpediente
     ? observacao === "Fim de Semana"
