@@ -14,6 +14,7 @@ export async function upsertColaboradorAction(
   const cpf = formData.get("cpf");
   const cargo = formData.get("cargo");
   const setor = formData.get("setor");
+  const ativo = formData.get("ativo");
 
   if (typeof nome !== "string" || !nome.trim()) {
     return { error: "Nome é obrigatório.", success: false };
@@ -29,6 +30,7 @@ export async function upsertColaboradorAction(
     cpf: cpfDigits,
     cargo: typeof cargo === "string" && cargo.trim() ? cargo.trim() : null,
     setor: typeof setor === "string" && setor.trim() ? setor.trim() : null,
+    ...(typeof ativo === "string" ? { ativo: ativo === "true" } : {}),
   };
 
   const supabase = await createClient();
@@ -49,10 +51,4 @@ export async function upsertColaboradorAction(
 
   revalidatePath("/colaboradores");
   return { error: null, success: true };
-}
-
-export async function toggleAtivoAction(id: string, ativo: boolean) {
-  const supabase = await createClient();
-  await supabase.from("colaboradores").update({ ativo }).eq("id", id);
-  revalidatePath("/colaboradores");
 }

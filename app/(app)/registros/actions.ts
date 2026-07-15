@@ -12,12 +12,12 @@ export async function punchAction(
   colaboradorId: string,
   data: string,
   campo: CampoPonto,
-  horario: string,
+  horario: string | null,
 ): Promise<{ error: string | null }> {
   if (!CAMPOS_PONTO.includes(campo)) {
     return { error: "Campo inválido." };
   }
-  if (!/^\d{2}:\d{2}$/.test(horario)) {
+  if (horario !== null && !/^\d{2}:\d{2}$/.test(horario)) {
     return { error: "Horário inválido." };
   }
 

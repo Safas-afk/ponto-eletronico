@@ -10,7 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { TimeSelect } from "@/components/ui/time-select";
 import { Label } from "@/components/ui/label";
 import { punchManyAction, type CampoPonto } from "@/app/(app)/registros/actions";
 
@@ -68,12 +68,7 @@ export function PunchLoteDialog({
         </DialogHeader>
         <div className="flex flex-col gap-3">
           <Label htmlFor={inputId}>Horário</Label>
-          <Input
-            id={inputId}
-            type="time"
-            value={horario}
-            onChange={(e) => setHorario(e.target.value)}
-          />
+          <TimeSelect id={inputId} value={horario} onChange={setHorario} />
           {error && <p className="text-sm text-destructive">{error}</p>}
         </div>
         <DialogFooter>

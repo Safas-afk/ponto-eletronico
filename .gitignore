@@ -42,3 +42,6 @@ next-env.d.ts
 
 # claude code (local-only settings, not shared)
 .claude/settings.local.json
+
+# dados de importação pontual (contém dados pessoais de colaboradores)
+/import-temp/

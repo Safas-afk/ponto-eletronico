@@ -24,13 +24,15 @@ export function CalendarioMes({
   const offset = getPrimeiroDiaSemana(ano, mes);
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted-foreground">
+    <div className="mx-auto flex w-fit flex-col gap-2">
+      <div className="grid grid-cols-7 place-items-center gap-1 text-center text-base text-muted-foreground">
         {DIAS_SEMANA.map((d) => (
-          <div key={d}>{d}</div>
+          <div key={d} className="w-20">
+            {d}
+          </div>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 place-items-center gap-1">
         {Array.from({ length: offset }, (_, i) => (
           <div key={`vazio-${i}`} />
         ))}
@@ -48,7 +50,7 @@ export function CalendarioMes({
               key={dia}
               href={`/registros/${dia}`}
               className={cn(
-                "flex aspect-square flex-col items-center justify-center rounded-[10px] border text-sm transition-colors hover:bg-muted",
+                "flex aspect-square w-20 flex-col items-center justify-center rounded-[10px] border text-lg transition-colors hover:bg-muted",
                 status === "completo" &&
                   "border-[var(--cell-complete-border)] bg-[var(--cell-complete-bg)] text-primary",
                 status === "pendente" &&

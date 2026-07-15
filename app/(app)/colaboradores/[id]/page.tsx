@@ -10,12 +10,14 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { ColaboradorFormDialog } from "@/components/colaboradores/colaborador-form-dialog";
+import { RegistroTabelaRow } from "@/components/colaboradores/registro-tabela-row";
 import { PeriodoPicker } from "@/components/registros/periodo-picker";
 import {
   getDefaultAnoMes,
   primeiroDiaIso,
   ultimoDiaIso,
   formatDataPtBr,
+  formatHora,
 } from "@/lib/registros/dates";
 import { getPeriodosDisponiveis } from "@/lib/registros/periodos";
 
@@ -90,15 +92,15 @@ export default async function ColaboradorDetalhePage({
         </TableHeader>
         <TableBody>
           {(registros ?? []).map((r) => (
-            <TableRow key={r.id}>
+            <RegistroTabelaRow key={r.id} href={`/registros/${r.data}/${id}`}>
               <TableCell>{formatDataPtBr(r.data)}</TableCell>
-              <TableCell>{r.entrada ?? "—"}</TableCell>
-              <TableCell>{r.saida_almoco ?? "—"}</TableCell>
-              <TableCell>{r.retorno_almoco ?? "—"}</TableCell>
-              <TableCell>{r.saida_final ?? "—"}</TableCell>
+              <TableCell>{r.entrada ? formatHora(r.entrada) : "—"}</TableCell>
+              <TableCell>{r.saida_almoco ? formatHora(r.saida_almoco) : "—"}</TableCell>
+              <TableCell>{r.retorno_almoco ? formatHora(r.retorno_almoco) : "—"}</TableCell>
+              <TableCell>{r.saida_final ? formatHora(r.saida_final) : "—"}</TableCell>
               <TableCell>{r.observacao ?? "—"}</TableCell>
               <TableCell>{r.detalhes_atividade ?? "—"}</TableCell>
-            </TableRow>
+            </RegistroTabelaRow>
           ))}
           {(registros ?? []).length === 0 && (
             <TableRow>

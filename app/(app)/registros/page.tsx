@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
+import { MoreVertical } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { PeriodoPicker } from "@/components/registros/periodo-picker";
 import { NovoRegistroDialog } from "@/components/registros/novo-registro-dialog";
 import { CalendarioMes, type ResumoDiaCalendario } from "@/components/registros/calendario-mes";
@@ -59,13 +66,22 @@ export default async function RegistrosPage({
             colaboradores={colaboradoresAtivos.map((c) => ({ id: c.id, nome: c.nome }))}
           />
           <PeriodoPicker ano={ano} mes={mes} periodos={periodos} />
-          <Button
-            variant="outline"
-            nativeButton={false}
-            render={<a href={`/api/backup?ano=${ano}&mes=${mes}`} />}
-          >
-            Exportar
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button variant="outline" size="icon" aria-label="Mais opções">
+                  <MoreVertical />
+                </Button>
+              }
+            />
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                render={<a href={`/api/backup?ano=${ano}&mes=${mes}`} />}
+              >
+                Exportar Backup Excel
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
       <CalendarioMes ano={ano} mes={mes} resumosPorDia={resumosPorDia} />

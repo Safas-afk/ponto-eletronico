@@ -40,6 +40,13 @@ export function formatDataPtBr(iso: string, options?: Intl.DateTimeFormatOptions
   ).format(data);
 }
 
+// O banco armazena horário com segundos (ex: "08:20:00"); a exibição
+// sempre corta pra HH:mm, sem alterar o valor armazenado.
+export function formatHora(hora: string | null | undefined): string {
+  if (!hora) return "";
+  return hora.slice(0, 5);
+}
+
 export const NOMES_MESES = [
   "Janeiro",
   "Fevereiro",

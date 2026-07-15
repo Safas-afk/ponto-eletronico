@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { upsertColaboradorAction } from "@/app/(app)/colaboradores/actions";
 import type { Tables } from "@/lib/supabase/types";
 
@@ -24,6 +25,7 @@ export function ColaboradorFormDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ativo, setAtivo] = useState(colaborador?.ativo ?? true);
   const [isPending, startTransition] = useTransition();
 
   function handleSubmit(formData: FormData) {
@@ -43,7 +45,10 @@ export function ColaboradorFormDialog({
       open={open}
       onOpenChange={(next) => {
         setOpen(next);
-        if (next) setError(null);
+        if (next) {
+          setError(null);
+          setAtivo(colaborador?.ativo ?? true);
+        }
       }}
     >
       <DialogTrigger render={trigger} />
@@ -69,6 +74,13 @@ export function ColaboradorFormDialog({
             <Label htmlFor="cargo">Cargo</Label>
             <Input id="cargo" name="cargo" defaultValue={colaborador?.cargo ?? ""} />
           </div>
+          {colaborador && (
+            <label className="flex items-center gap-2 text-sm">
+              <input type="hidden" name="ativo" value={ativo ? "true" : "false"} />
+              <Switch checked={ativo} onCheckedChange={setAtivo} size="sm" />
+              Ativo
+            </label>
+          )}
           {error && <p className="text-sm text-destructive">{error}</p>}
           <DialogFooter>
             <Button type="submit" disabled={isPending}>

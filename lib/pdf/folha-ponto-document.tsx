@@ -1,5 +1,5 @@
 import { Document, Page, View, Text, Image, StyleSheet, Font } from "@react-pdf/renderer";
-import { formatDataPtBr, getDiasDoMes, NOMES_MESES } from "@/lib/registros/dates";
+import { formatDataPtBr, formatHora, getDiasDoMes, NOMES_MESES } from "@/lib/registros/dates";
 import { OBSERVACOES_SEM_EXPEDIENTE } from "@/lib/registros/constants";
 import type { Tables } from "@/lib/supabase/types";
 
@@ -108,10 +108,10 @@ function montarLinha(iso: string, registro: Tables<"registros"> | undefined): Li
     ? observacao === "Fim de Semana"
       ? nomeDiaSemana(iso)
       : observacao!
-    : (registro?.entrada ?? "-");
+    : formatHora(registro?.entrada) || "-";
 
   const horarioOuTraco = (valor: string | null | undefined) =>
-    semExpediente ? "-" : (valor ?? "-");
+    semExpediente ? "-" : formatHora(valor) || "-";
 
   return {
     diaNumero,

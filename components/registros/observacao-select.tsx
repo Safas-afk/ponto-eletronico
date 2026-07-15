@@ -56,8 +56,8 @@ export function ObservacaoSelect({
         }}
       >
         <SelectTrigger size="sm">
-          <SelectValue placeholder="Observação">
-            {(v: string | null) => (!v || v === NENHUMA ? "Nenhuma" : v)}
+          <SelectValue placeholder="Observações">
+            {(v: string | null) => (!v || v === NENHUMA ? "Observações" : v)}
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
