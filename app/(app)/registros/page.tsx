@@ -62,9 +62,7 @@ export default async function RegistrosPage({
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-semibold">Registros</h1>
         <div className="flex items-center gap-2">
-          <NovoRegistroDialog
-            colaboradores={colaboradoresAtivos.map((c) => ({ id: c.id, nome: c.nome }))}
-          />
+          <NovoRegistroDialog />
           <PeriodoPicker ano={ano} mes={mes} periodos={periodos} />
           <DropdownMenu>
             <DropdownMenuTrigger

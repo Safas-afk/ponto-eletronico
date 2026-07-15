@@ -1,10 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { PunchButtonDialog } from "./punch-button-dialog";
+import { ObservacaoSelect } from "./observacao-select";
 import { PunchLoteDialog } from "./punch-lote-dialog";
 import { ObservacaoLoteSelect } from "./observacao-lote-select";
 import type { StatusPonto } from "@/lib/registros/alerts";
@@ -25,6 +26,12 @@ export type ColaboradorDia = {
   id: string;
   nome: string;
   status: StatusPonto;
+  entrada: string | null;
+  saida_almoco: string | null;
+  retorno_almoco: string | null;
+  saida_final: string | null;
+  observacao: string | null;
+  detalhes_atividade: string | null;
 };
 
 export function ListaDiaSelecionavel({
@@ -118,15 +125,51 @@ export function ListaDiaSelecionavel({
 
       <div className="flex flex-col">
         {colaboradores.map((c) => (
-          <div key={c.id} className="flex items-center gap-3 border-b py-3 last:border-b-0">
-            <Checkbox checked={selecionados.has(c.id)} onCheckedChange={() => alternar(c.id)} />
-            <Link
-              href={`/registros/${data}/${c.id}`}
-              className="flex flex-1 items-center justify-between hover:underline"
-            >
+          <div
+            key={c.id}
+            className="flex flex-col gap-2 border-b py-3 last:border-b-0 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <div className="flex min-w-48 items-center gap-2">
+              <Checkbox checked={selecionados.has(c.id)} onCheckedChange={() => alternar(c.id)} />
               <span className="font-medium">{c.nome}</span>
               <Badge variant={STATUS_VARIANT[c.status]}>{STATUS_LABEL[c.status]}</Badge>
-            </Link>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <PunchButtonDialog
+                colaboradorId={c.id}
+                data={data}
+                campo="entrada"
+                label="Entrada"
+                valorAtual={c.entrada}
+              />
+              <PunchButtonDialog
+                colaboradorId={c.id}
+                data={data}
+                campo="saida_almoco"
+                label="Saída Almoço"
+                valorAtual={c.saida_almoco}
+              />
+              <PunchButtonDialog
+                colaboradorId={c.id}
+                data={data}
+                campo="retorno_almoco"
+                label="Retorno Almoço"
+                valorAtual={c.retorno_almoco}
+              />
+              <PunchButtonDialog
+                colaboradorId={c.id}
+                data={data}
+                campo="saida_final"
+                label="Saída Final"
+                valorAtual={c.saida_final}
+              />
+              <ObservacaoSelect
+                colaboradorId={c.id}
+                data={data}
+                observacao={c.observacao}
+                detalhesAtividade={c.detalhes_atividade}
+              />
+            </div>
           </div>
         ))}
         {colaboradores.length === 0 && (

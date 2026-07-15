@@ -31,11 +31,20 @@ export default async function RegistrosDoDiaPage({
 
   const colaboradoresDia: ColaboradorDia[] = (colaboradores ?? [])
     .filter((c) => estaAdmitidoEm(c, data))
-    .map((c) => ({
-      id: c.id,
-      nome: c.nome,
-      status: getStatusPonto(registrosPorColaborador.get(c.id)),
-    }));
+    .map((c) => {
+      const registro = registrosPorColaborador.get(c.id);
+      return {
+        id: c.id,
+        nome: c.nome,
+        status: getStatusPonto(registro),
+        entrada: registro?.entrada ?? null,
+        saida_almoco: registro?.saida_almoco ?? null,
+        retorno_almoco: registro?.retorno_almoco ?? null,
+        saida_final: registro?.saida_final ?? null,
+        observacao: registro?.observacao ?? null,
+        detalhes_atividade: registro?.detalhes_atividade ?? null,
+      };
+    });
 
   return (
     <div className="flex flex-col gap-6">

@@ -21,33 +21,19 @@ function hojeIso(): string {
   return `${ano}-${String(mes).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
 }
 
-export function NovoRegistroDialog({
-  colaboradores,
-}: {
-  colaboradores: { id: string; nome: string }[];
-}) {
+export function NovoRegistroDialog() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [data, setData] = useState(hojeIso());
-  const [colaboradorId, setColaboradorId] = useState("");
-  const [error, setError] = useState<string | null>(null);
 
   function handleOpenChange(next: boolean) {
-    if (next) {
-      setData(hojeIso());
-      setColaboradorId("");
-      setError(null);
-    }
+    if (next) setData(hojeIso());
     setOpen(next);
   }
 
   function irParaRegistro() {
-    if (!data || !colaboradorId) {
-      setError("Escolha a data e o colaborador.");
-      return;
-    }
     setOpen(false);
-    router.push(`/registros/${data}/${colaboradorId}`);
+    router.push(`/registros/${data}`);
   }
 
   return (
@@ -67,31 +53,9 @@ export function NovoRegistroDialog({
               onChange={(e) => setData(e.target.value)}
             />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="novo-registro-colaborador">Colaborador</Label>
-            {/* Select nativo de propósito: o Select do base-ui dentro de um
-                Dialog apresentou bug real (popup com opções de tamanho
-                zero) — ver observacao-lote-select.tsx. */}
-            <select
-              id="novo-registro-colaborador"
-              value={colaboradorId}
-              onChange={(e) => setColaboradorId(e.target.value)}
-              className="h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 dark:bg-input/30"
-            >
-              <option value="" disabled>
-                Selecione um colaborador
-              </option>
-              {colaboradores.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.nome}
-                </option>
-              ))}
-            </select>
-          </div>
-          {error && <p className="text-sm text-destructive">{error}</p>}
         </div>
         <DialogFooter>
-          <Button onClick={irParaRegistro}>Ir para o registro</Button>
+          <Button onClick={irParaRegistro}>Ir para o dia</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

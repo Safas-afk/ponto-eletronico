@@ -92,7 +92,7 @@ export default async function ColaboradorDetalhePage({
         </TableHeader>
         <TableBody>
           {(registros ?? []).map((r) => (
-            <RegistroTabelaRow key={r.id} href={`/registros/${r.data}/${id}`}>
+            <RegistroTabelaRow key={r.id} href={`/registros/${r.data}`}>
               <TableCell>{formatDataPtBr(r.data)}</TableCell>
               <TableCell>{r.entrada ? formatHora(r.entrada) : "—"}</TableCell>
               <TableCell>{r.saida_almoco ? formatHora(r.saida_almoco) : "—"}</TableCell>
