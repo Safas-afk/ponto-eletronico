@@ -62,13 +62,6 @@ export default async function ColaboradorDetalhePage({
           </p>
         </div>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            nativeButton={false}
-            render={<a href={`/api/relatorio/${id}?ano=${ano}&mes=${mes}`} target="_blank" rel="noreferrer" />}
-          >
-            Baixar PDF
-          </Button>
           <ColaboradorFormDialog
             colaborador={colaborador}
             trigger={<Button variant="outline">Editar</Button>}

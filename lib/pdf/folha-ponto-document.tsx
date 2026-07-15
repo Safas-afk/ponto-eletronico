@@ -139,64 +139,93 @@ export function montarLinhasDaTabela(
   return getDiasDoMes(ano, mes).map((iso) => montarLinha(iso, registrosPorDia.get(iso)));
 }
 
-export function FolhaPontoDocument({
-  colaborador,
-  ano,
-  mes,
-  linhas,
-  papelTimbrado,
-}: {
+type FolhaPontoPageProps = {
   colaborador: Pick<Tables<"colaboradores">, "nome" | "cpf" | "cargo" | "setor">;
   ano: number;
   mes: number;
   linhas: LinhaTabela[];
   papelTimbrado: Buffer;
+};
+
+function FolhaPontoPage({ colaborador, ano, mes, linhas, papelTimbrado }: FolhaPontoPageProps) {
+  return (
+    <Page size="A4" style={styles.page}>
+      {/* eslint-disable-next-line jsx-a11y/alt-text -- Image aqui é do @react-pdf/renderer (PDF), não <img> HTML */}
+      <Image fixed src={papelTimbrado} style={styles.background} />
+
+      <View style={styles.identificacao}>
+        <Text style={styles.identLinha}>
+          Nome: {colaborador.nome}     CPF: {colaborador.cpf}
+        </Text>
+        <Text style={styles.identLinha}>
+          Setor: {colaborador.setor ?? "-"}     Cargo: {colaborador.cargo ?? "-"}
+        </Text>
+        <Text style={styles.identLinha}>
+          Mês/Ano: {NOMES_MESES[mes - 1]}/{ano}
+        </Text>
+      </View>
+
+      <View style={styles.tableRow}>
+        <Text style={[styles.colDia, styles.headerCell]}>Dia</Text>
+        <Text style={[styles.colHora, styles.headerCell]}>Entrada</Text>
+        <Text style={[styles.colHora, styles.headerCell]}>Saída Almoço</Text>
+        <Text style={[styles.colRetorno, styles.headerCell]}>Retorno Almoço</Text>
+        <Text style={[styles.colHora, styles.headerCell]}>Saída</Text>
+        <Text style={[styles.colObs, styles.headerCell]}>Observações</Text>
+        <Text style={[styles.colDetalhes, styles.headerCell]}>Detalhes da Atividade</Text>
+      </View>
+
+      {linhas.map((linha) => (
+        <View key={linha.diaNumero} style={styles.tableRow}>
+          <Text style={[styles.colDia, styles.cell, styles.firstCell]}>{linha.diaNumero}</Text>
+          <Text style={[styles.colHora, styles.cell]}>{linha.entrada}</Text>
+          <Text style={[styles.colHora, styles.cell]}>{linha.saidaAlmoco}</Text>
+          <Text style={[styles.colRetorno, styles.cell]}>{linha.retornoAlmoco}</Text>
+          <Text style={[styles.colHora, styles.cell]}>{linha.saidaFinal}</Text>
+          <Text style={[styles.colObs, styles.cell]}>{linha.observacao}</Text>
+          <Text style={[styles.colDetalhes, styles.cell]}>{linha.detalhes}</Text>
+        </View>
+      ))}
+
+      <View style={styles.assinatura}>
+        <Text style={styles.assinaturaLabel}>Assinatura:</Text>
+        <View style={styles.assinaturaLinha} />
+      </View>
+    </Page>
+  );
+}
+
+export function FolhaPontoDocument(props: FolhaPontoPageProps) {
+  return (
+    <Document>
+      <FolhaPontoPage {...props} />
+    </Document>
+  );
+}
+
+export function FolhaPontoDocumentLote({
+  itens,
+  ano,
+  mes,
+  papelTimbrado,
+}: {
+  itens: { colaborador: FolhaPontoPageProps["colaborador"]; linhas: LinhaTabela[] }[];
+  ano: number;
+  mes: number;
+  papelTimbrado: Buffer;
 }) {
   return (
     <Document>
-      <Page size="A4" style={styles.page}>
-        {/* eslint-disable-next-line jsx-a11y/alt-text -- Image aqui é do @react-pdf/renderer (PDF), não <img> HTML */}
-        <Image fixed src={papelTimbrado} style={styles.background} />
-
-        <View style={styles.identificacao}>
-          <Text style={styles.identLinha}>
-            Nome: {colaborador.nome}     CPF: {colaborador.cpf}
-          </Text>
-          <Text style={styles.identLinha}>
-            Setor: {colaborador.setor ?? "-"}     Cargo: {colaborador.cargo ?? "-"}
-          </Text>
-          <Text style={styles.identLinha}>
-            Mês/Ano: {NOMES_MESES[mes - 1]}/{ano}
-          </Text>
-        </View>
-
-        <View style={styles.tableRow}>
-          <Text style={[styles.colDia, styles.headerCell]}>Dia</Text>
-          <Text style={[styles.colHora, styles.headerCell]}>Entrada</Text>
-          <Text style={[styles.colHora, styles.headerCell]}>Saída Almoço</Text>
-          <Text style={[styles.colRetorno, styles.headerCell]}>Retorno Almoço</Text>
-          <Text style={[styles.colHora, styles.headerCell]}>Saída</Text>
-          <Text style={[styles.colObs, styles.headerCell]}>Observações</Text>
-          <Text style={[styles.colDetalhes, styles.headerCell]}>Detalhes da Atividade</Text>
-        </View>
-
-        {linhas.map((linha) => (
-          <View key={linha.diaNumero} style={styles.tableRow}>
-            <Text style={[styles.colDia, styles.cell, styles.firstCell]}>{linha.diaNumero}</Text>
-            <Text style={[styles.colHora, styles.cell]}>{linha.entrada}</Text>
-            <Text style={[styles.colHora, styles.cell]}>{linha.saidaAlmoco}</Text>
-            <Text style={[styles.colRetorno, styles.cell]}>{linha.retornoAlmoco}</Text>
-            <Text style={[styles.colHora, styles.cell]}>{linha.saidaFinal}</Text>
-            <Text style={[styles.colObs, styles.cell]}>{linha.observacao}</Text>
-            <Text style={[styles.colDetalhes, styles.cell]}>{linha.detalhes}</Text>
-          </View>
-        ))}
-
-        <View style={styles.assinatura}>
-          <Text style={styles.assinaturaLabel}>Assinatura:</Text>
-          <View style={styles.assinaturaLinha} />
-        </View>
-      </Page>
+      {itens.map((item, indice) => (
+        <FolhaPontoPage
+          key={indice}
+          colaborador={item.colaborador}
+          ano={ano}
+          mes={mes}
+          linhas={item.linhas}
+          papelTimbrado={papelTimbrado}
+        />
+      ))}
     </Document>
   );
 }
