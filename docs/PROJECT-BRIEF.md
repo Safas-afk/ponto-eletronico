@@ -29,11 +29,11 @@
 |---|---|---|---|
 | Arthur Oliveira Santos Aurich | 060.838.605-71 | Administrativo | Analista de Nível Superior |
 | Christiane Rayane Teixeira Silva | 041.444.695-06 | G.A.C | Assistente Administrativo |
-| Francina Alves Meira Rocha | 384.021.375-72 | S.I.M | Assistente Administrativo |
+| Francina Alves Meira Rocha | 384.021.575-72 | S.I.M | Assistente Administrativo |
 | Jacione Silva Bastos | 018.109.115-16 | S.I.M | Médica Veterinária |
 | Josimar da Silva Costa | 035.371.305-89 | Administrativo | Supervisor de Infraestrutura |
 | Juliana Prates Viana | 968.334.245-00 | ATER - Assistência | Tec. de Nível Superior |
-| Kariny Moreira Rocha | 080.839.966-99 | G.A.C | Assistente Técnico - Servidor Público |
+| Kariny Moreira Rocha | 080.839.965-99 | G.A.C | Assistente Técnico - Servidor Público |
 | Lazaro Ferraz Viana | 789.469.805-91 | C.A.R | Assistente Administrativo |
 | Queli Carolina de Souza Gonçalves | 018.526.865-02 | G.A.C | Assistente Técnico - Servidor Público |
 | Simone Brito Lima | 062.857.115-18 | Administrativo | Serviços Gerais |
@@ -272,20 +272,9 @@ um campo `ativo` (boolean) em `colaboradores`, para que funcionários
 desligados saiam da lista do dia a dia sem precisar apagar o
 histórico já impresso/assinado daquele período.
 
-## Data de admissão (descoberto em uso real, corrigido)
-A tabela `colaboradores` precisa de um campo `data_admissao` (date).
-Sem isso, a rotina das 7h gera registros "pendentes de classificação"
-para dias anteriores à admissão de um colaborador novo (caso real:
-funcionário admitido em 13/07 recebeu pendência para os dias 1-12).
-Regra: a automação diária e qualquer cálculo de "dias pendentes" deve
-ignorar datas anteriores à `data_admissao` do colaborador. Obrigatório
-para novos cadastros; pode ficar em branco para os já existentes.
-
 ## Relatórios e impressão
 - Quem revisa/assina: o próprio funcionário, no papel impresso
 - Formato necessário: folha de ponto mensal por funcionário, pronta
   para impressão e assinatura
-- **Decisão: sem relatório consolidado de todos os colaboradores.**
-  Não é necessário — a exportação individual por funcionário (com
-  Nome, CPF, Setor, Função e os registros do mês) já cobre todas as
-  informações necessárias. Não implementar essa funcionalidade.
+- [Preencher: precisa também de um relatório consolidado de todos os
+  funcionários, tipo resumo gerencial?]
